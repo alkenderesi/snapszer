@@ -1,17 +1,38 @@
-[project]
+[project]  # https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
 name = "snapszer"
 version = "0.1.0"
 description = "Snapszer card game"
-readme = "README.md"
-authors = [
-    { name = "alkenderesi", email = "43848302+alkenderesi@users.noreply.github.com" }
+keywords = ["snapszer", "schnapsen", "card game"]
+classifiers = [
+  "Topic :: Games/Entertainment :: Board Games",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.14",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Developers",
+  # TODO: "License :: "
 ]
+authors = [{ name = "alkenderesi" }]
+readme = "README.md"
 requires-python = ">=3.14"
 dependencies = []
+# TODO: license
+# TODO: license-files
 
-[project.scripts]
-snapszer = "snapszer:main"
+[project.urls]  # https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#urls
+Repository = "https://github.com/alkenderesi/snapszer"
+Wikipedia = "https://en.wikipedia.org/wiki/Schnapsen"
 
-[build-system]
-requires = ["uv_build>=0.11.23,<0.12.0"]
+[dependency-groups]  # https://docs.astral.sh/uv/concepts/projects/dependencies/#dependency-groups
+test = [
+  "pre-commit>=4.6.2,<5",
+]
+
+[build-system]  # https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#declaring-the-build-backend
+requires = ["uv_build>=0.12.4,<0.13.0"]
 build-backend = "uv_build"
+
+[tool.uv.build-backend]  # https://docs.astral.sh/uv/concepts/build-backend/#modules
+module-name = "snapszer"
+module-root = ""
