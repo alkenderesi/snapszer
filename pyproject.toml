@@ -37,8 +37,23 @@ module-root = ""
 
 [tool.ruff.lint]  # https://docs.astral.sh/ruff/settings/#lint
 select = ["ALL"]
+ignore = ["CPY001", "D"]  # TODO: remove D
+
+[tool.ruff.lint.per-file-ignores]  # https://docs.astral.sh/ruff/settings/#lint_per-file-ignores
+"tests/**" = ["D", "PLR2004", "S101"]
+
+[tool.coverage.run]  # https://coverage.readthedocs.io/en/latest/config.html#run
+source = ["snapszer"]
+branch = true
+
+[tool.coverage.report]  # https://coverage.readthedocs.io/en/latest/config.html#report
+fail_under = 100
+show_missing = true
+skip_empty = true
 
 [dependency-groups]  # https://docs.astral.sh/uv/concepts/projects/dependencies/#dependency-groups
 test = [
-  "pre-commit>=4.6.2,<5",
+  "pre-commit>=4.6.2,<4.7.0",
+  "pytest>=9.1.1,<9.2.0",
+  "pytest-cov>=7.1.0,<7.2.0",
 ]

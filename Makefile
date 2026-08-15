@@ -6,3 +6,6 @@ setup:
 
 clean:
 	rm -rf .venv
+
+test:
+	pytest --cov -vv
