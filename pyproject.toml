@@ -35,6 +35,9 @@ build-backend = "uv_build"
 module-name = "snapszer"
 module-root = ""
 
+[tool.ruff.lint]  # https://docs.astral.sh/ruff/settings/#lint
+select = ["ALL"]
+
 [dependency-groups]  # https://docs.astral.sh/uv/concepts/projects/dependencies/#dependency-groups
 test = [
   "pre-commit>=4.6.2,<5",
