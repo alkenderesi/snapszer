@@ -23,12 +23,12 @@ class Card:
     suit: Suit
     rank: Rank
 
-    def __str__(self) -> str:
-        return f"{self.suit.name} {self.rank.name}"
-
     @property
     def value(self) -> int:
         return self.rank.value
+
+    def __str__(self) -> str:
+        return f"{self.suit.name} {self.rank.name}"
 
 
 DECK = frozenset(Card(suit, rank) for suit in Suit for rank in Rank)

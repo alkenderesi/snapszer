@@ -37,6 +37,12 @@ class TestCard:
         card_b = Card(Suit.ZOLD, Rank.ASZ)
         assert card_a.value == card_b.value
 
+    def test_card_equality(self) -> None:
+        card_a = Card(Suit.PIROS, Rank.ASZ)
+        card_b = Card(Suit.PIROS, Rank.ASZ)
+        assert card_a is not card_b
+        assert card_a == card_b
+
     def test_card_is_immutable(self) -> None:
         card = Card(Suit.PIROS, Rank.ASZ)
         with pytest.raises(FrozenInstanceError):
@@ -57,6 +63,12 @@ class TestDeck:
             for rank in Rank:
                 assert Card(suit, rank) in DECK
         assert len(DECK) == 24
+
+    def test_deck_subtraction(self) -> None:
+        hand = {Card(Suit.PIROS, Rank.ASZ)}
+        diff = DECK - hand
+        assert isinstance(diff, frozenset)
+        assert len(diff) == 23
 
     def test_deck_is_immutable(self) -> None:
         card = Card(Suit.PIROS, Rank.ASZ)

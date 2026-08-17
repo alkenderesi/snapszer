@@ -7,5 +7,8 @@ setup:
 clean:
 	rm -rf .venv
 
+lint:
+	SKIP=pytest pre-commit run --all-files
+
 test:
-	pytest --cov -vv
+	pre-commit run pytest --all-files

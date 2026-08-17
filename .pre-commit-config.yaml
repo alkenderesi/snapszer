@@ -35,3 +35,14 @@ repos:
     rev: 0.12.5
     hooks:
       - id: uv-lock
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: pytest
+        language: unsupported
+        always_run: true
+        verbose: true
+        pass_filenames: false
+        require_serial: true
+        args: [ --cov, -vv ]
