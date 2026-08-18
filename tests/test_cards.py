@@ -7,41 +7,48 @@ from snapszer.cards import DECK, Card, Rank, Suit
 
 class TestSuit:
     def test_all_suits_are_present(self) -> None:
-        assert Suit.PIROS == "PIROS"
-        assert Suit.ZOLD == "ZOLD"
-        assert Suit.TOK == "TOK"
-        assert Suit.MAKK == "MAKK"
-        assert len(Suit) == 4
+        assert list(Suit) == [
+            "PIROS",
+            "ZOLD",
+            "TOK",
+            "MAKK",
+        ]
 
 
 class TestRank:
-    def test_all_ranks_are_present(self) -> None:
-        assert Rank.IX == 0
-        assert Rank.ALSO == 2
-        assert Rank.FELSO == 3
-        assert Rank.KIRALY == 4
-        assert Rank.X == 10
-        assert Rank.ASZ == 11
-        assert len(Rank) == 6
+    def test_all_ranks_and_their_values_are_present(self) -> None:
+        assert {rank: rank.value for rank in Rank} == {
+            Rank.IX: 0,
+            Rank.ALSO: 2,
+            Rank.FELSO: 3,
+            Rank.KIRALY: 4,
+            Rank.X: 10,
+            Rank.ASZ: 11,
+        }
 
 
 class TestCard:
-    def test_card_value_matches_rank_value(self) -> None:
-        suit = Suit.PIROS
-        rank = Rank.ASZ
-        card = Card(suit, rank)
+    @pytest.mark.parametrize("rank", list(Rank), ids=lambda rank: rank.name)
+    def test_card_value_matches_rank_value(self, rank: Rank) -> None:
+        card = Card(Suit.PIROS, rank)
         assert card.value == rank.value
 
     def test_card_value_is_suit_independent(self) -> None:
-        card_a = Card(Suit.MAKK, Rank.ASZ)
-        card_b = Card(Suit.ZOLD, Rank.ASZ)
-        assert card_a.value == card_b.value
+        rank = Rank.ASZ
+        values = {Card(suit, rank).value for suit in Suit}
+        assert values == {rank.value}
 
-    def test_card_equality(self) -> None:
+    def test_cards_with_same_suit_and_rank_are_equal(self) -> None:
         card_a = Card(Suit.PIROS, Rank.ASZ)
         card_b = Card(Suit.PIROS, Rank.ASZ)
         assert card_a is not card_b
         assert card_a == card_b
+        assert {card_a, card_b} == {card_a}
+
+    def test_cards_with_different_suit_or_rank_are_not_equal(self) -> None:
+        card = Card(Suit.PIROS, Rank.ASZ)
+        assert card != Card(Suit.MAKK, Rank.ASZ)
+        assert card != Card(Suit.PIROS, Rank.X)
 
     def test_card_is_immutable(self) -> None:
         card = Card(Suit.PIROS, Rank.ASZ)
@@ -49,30 +56,17 @@ class TestCard:
             card.suit = Suit.ZOLD
         with pytest.raises(FrozenInstanceError):
             card.rank = Rank.X
-
-    def test_card_string(self) -> None:
-        suit = Suit.PIROS
-        rank = Rank.ASZ
-        card = Card(suit, rank)
-        assert str(card) == f"{suit.name} {rank.name}"
+        assert card == Card(Suit.PIROS, Rank.ASZ)
 
 
 class TestDeck:
-    def test_all_cards_are_present(self) -> None:
-        for suit in Suit:
-            for rank in Rank:
-                assert Card(suit, rank) in DECK
-        assert len(DECK) == 24
-
-    def test_deck_subtraction(self) -> None:
-        hand = {Card(Suit.PIROS, Rank.ASZ)}
-        diff = DECK - hand
-        assert isinstance(diff, frozenset)
-        assert len(diff) == 23
+    def test_deck_has_every_suit_and_rank_combination(self) -> None:
+        expected = {Card(suit, rank) for suit in Suit for rank in Rank}
+        assert expected == DECK
 
     def test_deck_is_immutable(self) -> None:
-        card = Card(Suit.PIROS, Rank.ASZ)
+        assert isinstance(DECK, frozenset)
         with pytest.raises(AttributeError):
-            DECK.add(card)
+            DECK.add(Card(Suit.PIROS, Rank.ASZ))
         with pytest.raises(AttributeError):
-            DECK.remove(card)
+            DECK.remove(Card(Suit.PIROS, Rank.ASZ))

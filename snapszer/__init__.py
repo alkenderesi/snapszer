@@ -1,0 +1,1 @@
+"""Snapszer card game."""
