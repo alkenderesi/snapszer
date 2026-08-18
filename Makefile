@@ -8,7 +8,7 @@ clean:
 	rm -rf .venv
 
 lint:
-	SKIP=pytest pre-commit run --all-files
+	SKIP=pytest uv run pre-commit run --all-files
 
 test:
-	pre-commit run pytest --all-files
+	uv run pre-commit run pytest --all-files

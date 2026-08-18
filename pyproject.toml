@@ -31,13 +31,16 @@ Wikipedia = "https://en.wikipedia.org/wiki/Schnapsen"
 requires = ["uv_build>=0.12.4,<0.13.0"]
 build-backend = "uv_build"
 
+[tool.uv]  # https://docs.astral.sh/uv/reference/settings/
+required-version = ">=0.12.4,<0.13.0"
+
 [tool.uv.build-backend]  # https://docs.astral.sh/uv/concepts/build-backend/#modules
 module-name = "snapszer"
 module-root = ""
 
 [tool.ruff.lint]  # https://docs.astral.sh/ruff/settings/#lint
 select = ["ALL"]
-ignore = ["CPY001", "COM812", "TC001", "D203", "D212"]
+ignore = ["D203", "D212", "COM812", "CPY001", "TC001"]
 
 [tool.ruff.lint.per-file-ignores]  # https://docs.astral.sh/ruff/settings/#lint_per-file-ignores
 "tests/**" = ["D", "PLR2004", "S101"]

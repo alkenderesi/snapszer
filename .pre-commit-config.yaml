@@ -35,7 +35,7 @@ repos:
     rev: 0.12.5
     hooks:
       - id: uv-lock
-  - repo: local
+  - repo: local  # https://pre-commit.com/#new-hooks
     hooks:
       - id: pytest
         name: pytest
