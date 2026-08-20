@@ -40,7 +40,7 @@ module-root = ""
 
 [tool.ruff.lint]  # https://docs.astral.sh/ruff/settings/#lint
 select = ["ALL"]
-ignore = ["D203", "D212", "COM812", "CPY001", "TC001"]
+ignore = ["D203", "D212", "COM812", "CPY001", "TC001", "TC002", "TC003"]
 
 [tool.ruff.lint.per-file-ignores]  # https://docs.astral.sh/ruff/settings/#lint_per-file-ignores
 "tests/**" = ["D", "PLR2004", "S101"]

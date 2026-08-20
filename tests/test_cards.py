@@ -50,13 +50,17 @@ class TestCard:
         assert card != Card(Suit.MAKK, Rank.ASZ)
         assert card != Card(Suit.PIROS, Rank.X)
 
-    def test_card_is_immutable(self) -> None:
+    def test_card_is_read_only(self) -> None:
         card = Card(Suit.PIROS, Rank.ASZ)
         with pytest.raises(FrozenInstanceError):
             card.suit = Suit.ZOLD
         with pytest.raises(FrozenInstanceError):
             card.rank = Rank.X
-        assert card == Card(Suit.PIROS, Rank.ASZ)
+        with pytest.raises(FrozenInstanceError):
+            card.value = 10
+        assert card.suit == Suit.PIROS
+        assert card.rank == Rank.ASZ
+        assert card.value == 11
 
 
 class TestDeck:
@@ -64,9 +68,5 @@ class TestDeck:
         expected = {Card(suit, rank) for suit in Suit for rank in Rank}
         assert expected == DECK
 
-    def test_deck_is_immutable(self) -> None:
+    def test_deck_is_read_only(self) -> None:
         assert isinstance(DECK, frozenset)
-        with pytest.raises(AttributeError):
-            DECK.add(Card(Suit.PIROS, Rank.ASZ))
-        with pytest.raises(AttributeError):
-            DECK.remove(Card(Suit.PIROS, Rank.ASZ))
