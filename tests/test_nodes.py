@@ -4,7 +4,7 @@ import pytest
 
 from snapszer.cards import Card, Rank, Suit
 from snapszer.game import Game
-from snapszer.nodes import Node, Root
+from snapszer.nodes import Bonus, Node, Play, Root
 from snapszer.players import Player
 
 
@@ -99,3 +99,57 @@ class TestRoot:
         assert isinstance(root.game, Game)
         assert root.game.adu is self.adu
         assert root.game.players is players
+
+    def test_activate_adds_play_choices_for_each_card(self, root: Root, players: list[Player]):
+        starting_player = players[0]
+        root.activate()
+        plays = [choice for choice in root.choices if isinstance(choice, Play)]
+        assert {play.card for play in plays} == starting_player.hand
+        assert all(play.player is starting_player for play in plays)
+        assert all(play.previous is root for play in plays)
+
+    def test_activate_adds_one_bonus_choice(self, root: Root, players: list[Player]):
+        starting_player = players[0]
+        root.activate()
+        bonuses = [choice for choice in root.choices if isinstance(choice, Bonus)]
+        assert {bonus.card for bonus in bonuses} == {
+            Card(Suit.PIROS, Rank.FELSO),
+            Card(Suit.PIROS, Rank.KIRALY),
+        }
+        assert all(bonus.player is starting_player for bonus in bonuses)
+        assert all(bonus.previous is root for bonus in bonuses)
+
+    def test_activate_adds_multiple_bonus_choices(self, players: list[Player]):
+        extra_felso = Card(Suit.ZOLD, Rank.FELSO)
+        extra_kiraly = Card(Suit.ZOLD, Rank.KIRALY)
+        replacements = [Card(Suit.PIROS, Rank.IX), Card(Suit.PIROS, Rank.ALSO)]
+        players[0].hand.difference_update(replacements)
+        players[0].hand.update([extra_felso, extra_kiraly])
+        players[1].hand.difference_update([extra_felso, extra_kiraly])
+        players[1].hand.update(replacements)
+        root = Root(self.adu, players)
+        root.activate()
+        bonuses = [choice for choice in root.choices if isinstance(choice, Bonus)]
+        assert {bonus.card for bonus in bonuses} == {
+            Card(Suit.PIROS, Rank.FELSO),
+            Card(Suit.PIROS, Rank.KIRALY),
+            extra_felso,
+            extra_kiraly,
+        }
+
+    def test_activate_adds_no_bonus_choices(self, players: list[Player]):
+        kiraly = Card(Suit.PIROS, Rank.KIRALY)
+        other = Card(Suit.ZOLD, Rank.ASZ)
+        players[0].hand.remove(kiraly)
+        players[0].hand.add(other)
+        players[1].hand.remove(other)
+        players[1].hand.add(kiraly)
+        root = Root(self.adu, players)
+        root.activate()
+        assert not any(isinstance(choice, Bonus) for choice in root.choices)
+
+    def test_deactivate_clears_choices(self, root: Root):
+        root.activate()
+        assert root.choices
+        root.deactivate()
+        assert root.choices == []

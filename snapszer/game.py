@@ -39,8 +39,9 @@ class Game:
             raise ValueError(error_message)
 
     def _assign_teams(self):
-        self.adu_team.add(self.players[0])
-        for player in self.players[1:]:
+        starting_player, *other_players = self.players
+        self.adu_team.add(starting_player)
+        for player in other_players:
             if self.adu in player.hand:
                 self.adu_team.add(player)
             else:
