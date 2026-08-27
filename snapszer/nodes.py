@@ -22,6 +22,8 @@ class Node:
 
 class Root(Node):
     previous: None
+    next: Play | Bonus
+    choices: list[Play | Bonus]
 
     def __init__(self, adu: Card, players: list[Player]):
         super().__init__(None)
@@ -44,6 +46,10 @@ class Root(Node):
 
 
 class Play(Node):
+    previous: Root
+    next: None
+    choices: list[None]
+
     def __init__(self, previous: Root, player: Player, card: Card):
         super().__init__(previous)
         self.player = player
@@ -51,7 +57,32 @@ class Play(Node):
 
 
 class Bonus(Node):
+    previous: Root
+    next: GameEval
+    choices: list[GameEval]
+
     def __init__(self, previous: Root, player: Player, card: Card):
         super().__init__(previous)
         self.player = player
         self.card = card
+        self.score = 40 if self.card.rank == self.game.adu.rank else 20
+
+    def activate(self):
+        self.previous.next = self
+        self.player.bonus_score += self.score
+        self.choices = [GameEval(self, self.player)]
+
+    def deactivate(self):
+        self.previous.next = None
+        self.player.bonus_score -= self.score
+        self.choices.clear()
+
+
+class GameEval(Node):
+    previous: Bonus
+    next: None
+    choices: list[None]
+
+    def __init__(self, previous: Bonus, player: Player):
+        super().__init__(previous)
+        self.player = player

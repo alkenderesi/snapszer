@@ -3,60 +3,10 @@ import pytest
 from snapszer.cards import Card, Rank, Suit
 from snapszer.game import Game
 from snapszer.players import Player
+from tests.fixtures import GameFixtures
 
 
-class TestGame:
-    adu = Card(Suit.PIROS, Rank.ASZ)
-
-    @pytest.fixture
-    def players(self) -> list[Player]:
-        return [
-            Player(
-                "A",
-                {
-                    Card(Suit.PIROS, Rank.ASZ),
-                    Card(Suit.PIROS, Rank.X),
-                    Card(Suit.PIROS, Rank.KIRALY),
-                    Card(Suit.PIROS, Rank.FELSO),
-                    Card(Suit.PIROS, Rank.ALSO),
-                    Card(Suit.PIROS, Rank.IX),
-                },
-            ),
-            Player(
-                "B",
-                {
-                    Card(Suit.ZOLD, Rank.ASZ),
-                    Card(Suit.ZOLD, Rank.X),
-                    Card(Suit.ZOLD, Rank.KIRALY),
-                    Card(Suit.ZOLD, Rank.FELSO),
-                    Card(Suit.ZOLD, Rank.ALSO),
-                    Card(Suit.ZOLD, Rank.IX),
-                },
-            ),
-            Player(
-                "C",
-                {
-                    Card(Suit.TOK, Rank.ASZ),
-                    Card(Suit.TOK, Rank.X),
-                    Card(Suit.TOK, Rank.KIRALY),
-                    Card(Suit.TOK, Rank.FELSO),
-                    Card(Suit.TOK, Rank.ALSO),
-                    Card(Suit.TOK, Rank.IX),
-                },
-            ),
-            Player(
-                "D",
-                {
-                    Card(Suit.MAKK, Rank.ASZ),
-                    Card(Suit.MAKK, Rank.X),
-                    Card(Suit.MAKK, Rank.KIRALY),
-                    Card(Suit.MAKK, Rank.FELSO),
-                    Card(Suit.MAKK, Rank.ALSO),
-                    Card(Suit.MAKK, Rank.IX),
-                },
-            ),
-        ]
-
+class TestGame(GameFixtures):
     def test_wrong_player_count(self, players: list[Player]):
         with pytest.raises(ValueError, match="Number of players must be 4, got 3"):
             Game(self.adu, players[:3])

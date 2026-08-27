@@ -21,6 +21,7 @@ repos:
         args: [ --fix=lf ]
       - id: name-tests-test
         args: [ --pytest-test-first ]
+        exclude: ^tests/fixtures\.py$
       - id: pretty-format-json
         args: [ --autofix ]
       - id: trailing-whitespace
