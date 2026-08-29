@@ -11,6 +11,8 @@ class Game:
         self._validate_dealt_cards(players)
         self.adu = adu
         self.players = players
+        self.is_adu_out = False
+        self.outcome: dict[Player, int] = {}
         self.adu_team: set[Player] = set()
         self.non_adu_team: set[Player] = set()
         self._assign_teams()
@@ -41,11 +43,17 @@ class Game:
     def _assign_teams(self):
         starting_player, *other_players = self.players
         self.adu_team.add(starting_player)
+        starting_player.team = self.adu_team
+        starting_player.opponent_team = self.non_adu_team
         for player in other_players:
             if self.adu in player.hand:
                 self.adu_team.add(player)
+                player.team = self.adu_team
+                player.opponent_team = self.non_adu_team
             else:
                 self.non_adu_team.add(player)
+                player.team = self.non_adu_team
+                player.opponent_team = self.adu_team
 
     def _link_players(self):
         for i, player in enumerate(self.players):

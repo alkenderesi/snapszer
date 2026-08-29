@@ -22,10 +22,19 @@ class TestGame(GameFixtures):
         with pytest.raises(ValueError, match="Undealt cards: PIROS ASZ"):
             Game(self.adu, players)
 
+    def test_adu_starts_unplayed(self, players: list[Player]):
+        game = Game(self.adu, players)
+        assert game.is_adu_out is False
+
     def test_adu_team_has_one_player(self, players: list[Player]):
         game = Game(self.adu, players)
         assert game.adu_team == {players[0]}
         assert game.non_adu_team == {players[1], players[2], players[3]}
+        assert players[0].team is game.adu_team
+        assert players[0].opponent_team is game.non_adu_team
+        for player in players[1:]:
+            assert player.team is game.non_adu_team
+            assert player.opponent_team is game.adu_team
 
     def test_adu_team_has_two_players(self, players: list[Player]):
         other = Card(Suit.ZOLD, Rank.ASZ)
@@ -36,6 +45,12 @@ class TestGame(GameFixtures):
         game = Game(self.adu, players)
         assert game.adu_team == {players[0], players[1]}
         assert game.non_adu_team == {players[2], players[3]}
+        for player in players[:2]:
+            assert player.team is game.adu_team
+            assert player.opponent_team is game.non_adu_team
+        for player in players[2:]:
+            assert player.team is game.non_adu_team
+            assert player.opponent_team is game.adu_team
 
     def test_players_are_linked_in_a_circle(self, players: list[Player]):
         game = Game(self.adu, players)
