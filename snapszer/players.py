@@ -7,8 +7,8 @@ class Player:
         self.hand = hand
         self.score: int = 0
         self.bonus_score: int = 0
-        self.previous: Player | None = None
-        self.next: Player | None = None
+        self.previous: Player = None
+        self.next: Player = None
         self.team: set[Player] = {self}
         self.opponent_team: set[Player] = set()
 

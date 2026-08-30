@@ -20,13 +20,13 @@ class Node:
         return self.previous.game
 
     @property
-    def round(self) -> Round | None:
+    def round(self) -> Round:
         return self.previous.round
 
 
 class Root(Node):
     previous: None
-    next: Round | None
+    next: Round
     choices: list[Round]
 
     def __init__(self, adu: Card, players: list[Player]):
@@ -51,7 +51,7 @@ class Root(Node):
 
 class Round(Node):
     previous: Root | GameEval
-    next: Play | Bonus | None
+    next: Play | Bonus
     choices: list[Play | Bonus]
 
     def __init__(self, previous: Root | GameEval, player: Player):
@@ -87,7 +87,7 @@ class Round(Node):
 
 class Play(Node):
     previous: Round | Play | GameEval
-    next: Play | RoundEval | None
+    next: Play | RoundEval
     choices: list[Play | RoundEval]
 
     def __init__(self, previous: Round | Play | GameEval, player: Player, card: Card):
@@ -132,7 +132,7 @@ class Play(Node):
 
 class Bonus(Node):
     previous: Round
-    next: GameEval | None
+    next: GameEval
     choices: list[GameEval]
 
     def __init__(self, previous: Round, player: Player, card: Card):
@@ -154,7 +154,7 @@ class Bonus(Node):
 
 class RoundEval(Node):
     previous: Play
-    next: GameEval | None
+    next: GameEval
     choices: list[GameEval]
 
     def __init__(self, previous: Play):
