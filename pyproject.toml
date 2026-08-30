@@ -39,7 +39,7 @@ module-name = "snapszer"
 module-root = ""
 
 [tool.ruff]  # https://docs.astral.sh/ruff/settings/#top-level
-line-length = 120
+line-length = 130
 
 [tool.ruff.lint]  # https://docs.astral.sh/ruff/settings/#lint
 select = ["ALL"]

@@ -11,10 +11,10 @@ class Game:
         self._validate_dealt_cards(players)
         self.adu = adu
         self.players = players
-        self.is_adu_out = False
-        self.outcome: dict[Player, int] = {}
         self.adu_team: set[Player] = set()
         self.non_adu_team: set[Player] = set()
+        self.is_adu_out = False
+        self.outcome: dict[Player, int] = {}
         self._assign_teams()
         self._link_players()
 

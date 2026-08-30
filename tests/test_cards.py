@@ -66,6 +66,24 @@ class TestCard:
         card = Card(Suit.PIROS, Rank.ASZ)
         assert str(card) == "PIROS ASZ"
 
+    def test_card_beats_higher_same_suit(self):
+        assert Card(Suit.ZOLD, Rank.ASZ).beats(Card(Suit.ZOLD, Rank.X), Suit.PIROS) is True
+
+    def test_card_does_not_beat_lower_or_equal_same_suit(self):
+        lower = Card(Suit.ZOLD, Rank.X)
+        higher = Card(Suit.ZOLD, Rank.ASZ)
+        assert lower.beats(higher, Suit.PIROS) is False
+        assert higher.beats(higher, Suit.PIROS) is False
+
+    def test_adu_beats_non_adu(self):
+        assert Card(Suit.PIROS, Rank.IX).beats(Card(Suit.ZOLD, Rank.ASZ), Suit.PIROS) is True
+
+    def test_non_adu_does_not_beat_adu(self):
+        assert Card(Suit.ZOLD, Rank.ASZ).beats(Card(Suit.PIROS, Rank.IX), Suit.PIROS) is False
+
+    def test_non_adu_does_not_beat_different_non_adu_suit(self):
+        assert Card(Suit.ZOLD, Rank.ASZ).beats(Card(Suit.TOK, Rank.IX), Suit.PIROS) is False
+
 
 class TestDeck:
     def test_deck_has_every_suit_and_rank_combination(self):

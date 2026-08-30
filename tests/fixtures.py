@@ -1,7 +1,7 @@
 import pytest
 
 from snapszer.cards import Card, Rank, Suit
-from snapszer.nodes import Root
+from snapszer.nodes import Root, Round
 from snapszer.players import Player
 
 
@@ -17,3 +17,8 @@ class NodeFixtures(GameFixtures):
     @pytest.fixture
     def root(self, players: list[Player]) -> Root:
         return Root(self.adu, players)
+
+    @pytest.fixture
+    def round_node(self, root: Root) -> Round:
+        root.activate()
+        return root.choices[0]

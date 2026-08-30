@@ -30,5 +30,8 @@ class Card:
     def __str__(self) -> str:
         return f"{self.suit.name} {self.rank.name}"
 
+    def beats(self, other: Card, adu_suit: Suit) -> bool:
+        return (self.suit == other.suit and self.value > other.value) or (self.suit == adu_suit and other.suit != adu_suit)
+
 
 DECK = frozenset(Card(suit, rank) for suit in Suit for rank in Rank)
