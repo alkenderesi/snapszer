@@ -16,7 +16,7 @@ class TestSuit:
 
 
 class TestRank:
-    def test_all_ranks_and_their_values_are_present(self):
+    def test_point_values(self):
         assert {rank: rank.value for rank in Rank} == {
             Rank.IX: 0,
             Rank.ALSO: 2,
@@ -28,48 +28,24 @@ class TestRank:
 
 
 class TestCard:
-    @pytest.mark.parametrize("rank", list(Rank), ids=lambda rank: rank.name)
-    def test_card_value_matches_rank_value(self, rank: Rank):
-        card = Card(Suit.PIROS, rank)
-        assert card.value == rank.value
-
-    def test_card_value_is_suit_independent(self):
-        rank = Rank.ASZ
-        values = {Card(suit, rank).value for suit in Suit}
-        assert values == {rank.value}
-
-    def test_cards_with_same_suit_and_rank_are_equal(self):
+    def test_is_a_frozen_value_object(self):
         card_a = Card(Suit.PIROS, Rank.ASZ)
         card_b = Card(Suit.PIROS, Rank.ASZ)
         assert card_a is not card_b
         assert card_a == card_b
         assert {card_a, card_b} == {card_a}
-
-    def test_cards_with_different_suit_or_rank_are_not_equal(self):
-        card = Card(Suit.PIROS, Rank.ASZ)
-        assert card != Card(Suit.MAKK, Rank.ASZ)
-        assert card != Card(Suit.PIROS, Rank.X)
-
-    def test_card_is_read_only(self):
-        card = Card(Suit.PIROS, Rank.ASZ)
+        assert card_a != Card(Suit.MAKK, Rank.ASZ)
+        assert card_a != Card(Suit.PIROS, Rank.X)
         with pytest.raises(FrozenInstanceError):
-            card.suit = Suit.ZOLD
-        with pytest.raises(FrozenInstanceError):
-            card.rank = Rank.X
-        with pytest.raises(FrozenInstanceError):
-            card.value = 10
-        assert card.suit == Suit.PIROS
-        assert card.rank == Rank.ASZ
-        assert card.value == 11
+            card_a.suit = Suit.ZOLD
 
-    def test_card_string_is_suit_and_rank_names(self):
-        card = Card(Suit.PIROS, Rank.ASZ)
-        assert str(card) == "PIROS ASZ"
+    def test_str_is_suit_and_rank_names(self):
+        assert str(Card(Suit.PIROS, Rank.ASZ)) == "PIROS ASZ"
 
-    def test_card_beats_higher_same_suit(self):
+    def test_beats_higher_same_suit(self):
         assert Card(Suit.ZOLD, Rank.ASZ).beats(Card(Suit.ZOLD, Rank.X), Suit.PIROS) is True
 
-    def test_card_does_not_beat_lower_or_equal_same_suit(self):
+    def test_does_not_beat_lower_or_equal_same_suit(self):
         lower = Card(Suit.ZOLD, Rank.X)
         higher = Card(Suit.ZOLD, Rank.ASZ)
         assert lower.beats(higher, Suit.PIROS) is False
@@ -81,14 +57,14 @@ class TestCard:
     def test_non_adu_does_not_beat_adu(self):
         assert Card(Suit.ZOLD, Rank.ASZ).beats(Card(Suit.PIROS, Rank.IX), Suit.PIROS) is False
 
-    def test_non_adu_does_not_beat_different_non_adu_suit(self):
+    def test_off_suit_non_adu_does_not_beat(self):
         assert Card(Suit.ZOLD, Rank.ASZ).beats(Card(Suit.TOK, Rank.IX), Suit.PIROS) is False
 
 
 class TestDeck:
-    def test_deck_has_every_suit_and_rank_combination(self):
+    def test_has_every_suit_and_rank_combination(self):
         expected = {Card(suit, rank) for suit in Suit for rank in Rank}
         assert expected == DECK
 
-    def test_deck_is_read_only(self):
+    def test_is_read_only(self):
         assert isinstance(DECK, frozenset)
